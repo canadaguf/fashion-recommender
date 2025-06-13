@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Рекомендатель одежды</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; text-align: center; }
+    input[type="file"] { margin: 20px auto; display: block; }
+    #results img { width: 150px; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Загрузите изображение товара</h1>
+  <input type="file" id="imageInput" accept="image/*">
+  <div id="results"></div>
+
+  <script>
+    const input = document.getElementById('imageInput');
+    const results = document.getElementById('results');
+
+    input.addEventListener('change', async () => {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = async () => {
+        const b64 = reader.result;
+
+        try {
+          const response = await fetch('https://<your-render-url>.onrender.com/recommend',  {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: b64 })
+          });
+
+          const data = await response.json();
+          results.innerHTML = "<h2>Рекомендации:</h2>" + data.recommendations.map(i => `
+            <img src="/images/${i}.jpg" width="100" style="margin:5px;">
+          `).join("");
+        } catch (err) {
+          alert("Ошибка при получении рекомендаций");
+          console.error(err);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+__pycache__
+*.pyc
+*.log
+*.env
+.DS_Store
+.Python
+env/
+venv/
+*.pkl  # если хочешь скрыть pkl-файлы (или оставить их в репо — твой выбор)
